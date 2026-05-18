@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"errors"
 	"sync"
 	"to-do/models"
 )
@@ -27,4 +28,15 @@ func (s *MemoryStore) Create(todo models.Todo) models.Todo {
 	s.nextID++
 
 	return todo
+}
+
+func (s *MemoryStore) Get(id int) (models.Todo, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	todo, exists := s.todos[id]
+	if !exists {
+		return models.Todo{}, errors.New("task not found")
+	}
+	return todo, nil
 }

@@ -16,6 +16,7 @@ func main() {
 	handler := handlers.NewTodoHandler(store)
 
 	router.HandleFunc("/todos", handler.CreateTodo).Methods("POST")
+	router.HandleFunc("/todos/{id}", handler.GetTodo).Methods("GET")
 
 	log.Println("Server running on port 8080")
 
