@@ -88,3 +88,21 @@ func (h *TodoHandler) UpdateTask(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(updatedTodo)
 }
+
+func (h *TodoHandler) DeleteTask(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+
+	id, err := strconv.Atoi(params["id"])
+	if err != nil {
+		http.Error(w, "invalid id", http.StatusBadRequest)
+		return
+	}
+
+	err = h.Store.Delete(id)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}

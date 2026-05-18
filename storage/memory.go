@@ -54,3 +54,15 @@ func (s *MemoryStore) Update(id int, todo models.Todo) (models.Todo, error) {
 
 	return todo, nil
 }
+
+func (s *MemoryStore) Delete(id int) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	_, exists := s.todos[id]
+	if !exists {
+		return errors.New("task not found")
+	}
+	delete(s.todos, id)
+	return nil
+}

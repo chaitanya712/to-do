@@ -18,6 +18,7 @@ func main() {
 	router.HandleFunc("/todos", handler.CreateTodo).Methods("POST")
 	router.HandleFunc("/todos/{id}", handler.GetTodo).Methods("GET")
 	router.HandleFunc("/todos/{id}", handler.UpdateTask).Methods("PUT")
+	router.HandleFunc("/todos/{id}", handler.DeleteTask).Methods("DELETE")
 
 	log.Println("Server running on port 8080")
 
