@@ -19,6 +19,7 @@ func main() {
 	router.HandleFunc("/todos/{id}", handler.GetTodo).Methods("GET")
 	router.HandleFunc("/todos/{id}", handler.UpdateTask).Methods("PUT")
 	router.HandleFunc("/todos/{id}", handler.DeleteTask).Methods("DELETE")
+	router.HandleFunc("/todos", handler.ListTask).Methods("GET")
 
 	log.Println("Server running on port 8080")
 

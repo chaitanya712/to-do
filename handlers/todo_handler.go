@@ -106,3 +106,10 @@ func (h *TodoHandler) DeleteTask(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusNoContent)
 }
+
+func (h *TodoHandler) ListTask(w http.ResponseWriter, r *http.Request) {
+	includeCompleted := r.URL.Query().Get("include_completed") == "true"
+
+	todos := h.Store.List(includeCompleted)
+	json.NewEncoder(w).Encode(todos)
+}

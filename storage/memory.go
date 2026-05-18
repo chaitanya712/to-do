@@ -2,6 +2,7 @@ package storage
 
 import (
 	"errors"
+	"sort"
 	"sync"
 	"to-do/models"
 )
@@ -65,4 +66,23 @@ func (s *MemoryStore) Delete(id int) error {
 	}
 	delete(s.todos, id)
 	return nil
+}
+
+func (s *MemoryStore) List(includeCompleted bool) []models.Todo {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	var result []models.Todo
+
+	for _, todo := range s.todos {
+		if !includeCompleted && todo.Completed {
+			continue
+		}
+		result = append(result, todo)
+	}
+
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].DueDate.Before(result[i].DueDate)
+	})
+	return result
 }
