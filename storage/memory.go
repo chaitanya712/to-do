@@ -40,3 +40,17 @@ func (s *MemoryStore) Get(id int) (models.Todo, error) {
 	}
 	return todo, nil
 }
+
+func (s *MemoryStore) Update(id int, todo models.Todo) (models.Todo, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	_, exists := s.todos[id]
+	if exists {
+		return models.Todo{}, errors.New("task not found")
+	}
+
+	todo.ID = id
+	s.todos[id] = todo
+
+	return todo, nil
+}

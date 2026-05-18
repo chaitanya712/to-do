@@ -53,8 +53,38 @@ func (h *TodoHandler) GetTodo(w http.ResponseWriter, r *http.Request) {
 	}
 	todo, err := h.Store.Get(id)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
 	json.NewEncoder(w).Encode(todo)
+}
+
+func (h *TodoHandler) UpdateTask(w http.ResponseWriter, r *http.Request) {
+	var req models.TodoRequest
+
+	params := mux.Vars(r)
+
+	id, err := strconv.Atoi(params["id"])
+	if err != nil {
+		http.Error(w, "invalid id", http.StatusBadRequest)
+		return
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		http.Error(w, "invalid request", http.StatusBadRequest)
+		return
+	}
+
+	newTodo := models.Todo{
+		Task:      req.Task,
+		DueDate:   req.DueDate,
+		Completed: req.Completed,
+	}
+
+	updatedTodo, err := h.Store.Update(id, newTodo)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+	}
+	json.NewEncoder(w).Encode(updatedTodo)
 }
